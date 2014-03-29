@@ -1,9 +1,8 @@
 //
-//  main.c
-//  sopeProj1
+//  Trabalho Pratico 1
+//  Sistemas Operativos 2013/2014
 //
-//  Created by Eduardo Almeida on 28/03/14.
-//  Copyright (c) 2014 Bitten Apps. All rights reserved.
+//  Grupo 2 (Turma 2MIEIC03)
 //
 
 #include <stdio.h>
