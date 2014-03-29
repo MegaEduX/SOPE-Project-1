@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		6FF91DFD18E5B37300A9FCFC /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF91DFC18E5B37300A9FCFC /* main.c */; };
-		6FF91DFF18E5B37300A9FCFC /* sopeProj1.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6FF91DFE18E5B37300A9FCFC /* sopeProj1.1 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -18,7 +17,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				6FF91DFF18E5B37300A9FCFC /* sopeProj1.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -27,7 +25,6 @@
 /* Begin PBXFileReference section */
 		6FF91DF918E5B37300A9FCFC /* sopeProj1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sopeProj1; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FF91DFC18E5B37300A9FCFC /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		6FF91DFE18E5B37300A9FCFC /* sopeProj1.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = sopeProj1.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				6FF91DFC18E5B37300A9FCFC /* main.c */,
-				6FF91DFE18E5B37300A9FCFC /* sopeProj1.1 */,
 			);
 			path = sopeProj1;
 			sourceTree = "<group>";
@@ -225,6 +221,7 @@
 				6FF91E0418E5B37300A9FCFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
