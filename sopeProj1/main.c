@@ -18,6 +18,10 @@
 #include <libgen.h>
 #include <time.h>
 
+#define DEBUG 1
+
+//  Global Variables
+
 const char *tail_path = "/usr/bin/tail";
 const char *grep_path = "/usr/bin/grep";
 
@@ -32,8 +36,15 @@ pid_t _monitor_pid;
 
 pid_t _pid_to_kill;
 
-void alarm_handler(int signo) {
+void alarm_handler(__attribute__((unused)) int signo) {
     if (_pid_to_kill) {
+        
+#if DEBUG
+        
+        printf("alarm_handler: Got alarm, sending kill signal to %d...\n", _pid_to_kill);
+        
+#endif
+        
         int k = _pid_to_kill;
         
         _pid_to_kill = 0;
@@ -42,8 +53,14 @@ void alarm_handler(int signo) {
     }
 }
 
-void check_match_grep_term(int signo) {
+void check_match_grep_term(__attribute__((unused)) int signo) {
     //  Clean up check_match_grep.
+    
+#if DEBUG
+    
+    printf("check_match_grep_term: Sending kill signal to %d...\n", _pid_to_kill);
+    
+#endif
     
     kill(_pid_to_kill, SIGTERM);
     
@@ -76,7 +93,7 @@ bool check_match_grep(const char *filename, const char *line, const char *match)
         close(pipe1[0]);
         close(pipe2[1]);
         
-        if ( write(pipe1[1], line, strlen(line) ) != strlen(line) )
+        if ( write(pipe1[1], line, strlen(line) ) != (long) strlen(line) )
             return false;
         
         read(pipe2[0], buffer, sizeof(buffer));
@@ -139,8 +156,14 @@ bool check_match_grep(const char *filename, const char *line, const char *match)
 pid_t child_tail;
 pid_t child_grep_thread;
 
-void watch_file_term(int signo) {
+void watch_file_term(__attribute__((unused)) int signo) {
     //  Clean up watch_file.
+    
+#if DEBUG
+    
+    printf("watch_file_term: Sending kill signals to %d and %d...", child_tail, child_grep_thread);
+    
+#endif
     
     kill(child_tail, SIGTERM);
     kill(child_grep_thread, SIGTERM);
@@ -148,6 +171,7 @@ void watch_file_term(int signo) {
 
 void watch_file(const char *string, const char *filepath) {
     signal(SIGTERM, &watch_file_term);
+    signal(SIGUSR1, &watch_file_term);
     
     pid_t pid;
     
@@ -209,12 +233,24 @@ void monitor() {
             
             strcpy(files[i], "REM");
             
+#if DEBUG
+            
+            printf("monitor: Killing child process %d...\n", procv[i]);
+            
+#endif
+            
             kill(procv[i], SIGUSR1);
         }
     }
     
     if (rem == procc) {
         //  All files have been removed.
+        
+#if DEBUG
+        
+        printf("monitor: Killing parent process %d...\n", getppid());
+        
+#endif
         
         kill(getppid(), SIGUSR2);
         
@@ -229,10 +265,10 @@ void monitor() {
 #pragma mark -
 #pragma mark Main Thread
 
-void cleanUp(int signo) {
+void clean_up(__attribute__((unused)) int signo) {
     //  Clean everything up!
     
-    printf("\n[Message] Time's up, cleaning up and terminating...\n");
+    printf("clean_up: Cleaning up and terminating...\n");
     
     kill(_monitor_pid, SIGTERM);
     
@@ -256,20 +292,24 @@ int main(int argc, const char *argv[]) {
         pid_t forked_pid;
         
         if (( forked_pid = fork() )) {
-            watch_file(argv[2], argv[i]);
+            //  Parent Process
             
-            return 0;
-        } else {
             procv[i - 3] = forked_pid;
             
             files[i - 3] = malloc(strlen(argv[i] + 1));
             strcpy(files[i - 3], argv[i]);
             
             procc++;
+        } else {
+            // Child Process
+            
+            watch_file(argv[2], argv[i]);
+            
+            return 0;
         }
     }
     
-    signal(SIGUSR2, &cleanUp);
+    signal(SIGUSR2, &clean_up);
     
     if (( _monitor_pid = fork() )) {
         monitor();
@@ -279,7 +319,7 @@ int main(int argc, const char *argv[]) {
     
     sleep(atoi(argv[1]));
     
-    cleanUp(0);
+    clean_up(0);
     
     return 0;
 }
