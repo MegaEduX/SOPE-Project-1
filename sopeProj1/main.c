@@ -126,7 +126,12 @@ bool check_match_grep(const char *filename, const char *line, const char *match)
         
         if (pipe1[0] != STDIN_FILENO) {
             if (dup2(pipe1[0], STDIN_FILENO) != STDIN_FILENO) {
-                printf("err1");
+              
+#if DEBUG
+              	
+                printf("Pipe Creation Error 1");
+              	
+#endif
                 
                 return false;
             }
@@ -136,7 +141,12 @@ bool check_match_grep(const char *filename, const char *line, const char *match)
         
         if (pipe2[1] != STDOUT_FILENO) {
             if (dup2(pipe2[1], STDOUT_FILENO) != STDOUT_FILENO) {
-                printf("err2");
+              
+#if DEBUG
+              	
+                printf("Pipe Creation Error 2");
+              	
+#endif
                 
                 return false;
             }
