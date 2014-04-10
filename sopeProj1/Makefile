@@ -9,10 +9,14 @@ CC := gcc
 OBJFILES := $(CFILES:.c=.o)
 DEPFILES := $(CFILES:.c=.d)
 
-$(PROG) : $(OBJFILES)
-		$(LINK.o) $(LDFLAGS) -o $@ $^
+BINDIR := bin
 
+$(BINDIR)/$(PROG) : $(OBJFILES)
+		mkdir -p $(BINDIR)
+		$(LINK.o) $(LDFLAGS) -o $@ $^
+		rm *.d
+		rm *.o
 clean :
-		rm -f $(PROG) $(OBJFILES) $(DEPFILES)
+		rm -rf $(BINDIR) $(OBJFILES) $(DEPFILES)
 
 -include $(DEPFILES)
